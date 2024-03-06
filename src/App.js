@@ -35,7 +35,6 @@ const Card = styled.div`
   border-radius: 5px;
   border: none;
   box-shadow: #ecece9 0px 3px 3px 3px;
-  // #ececec 0px 7px 10px 0px;
 
   @media ${device.lg} {
     width: 42%;
@@ -64,10 +63,22 @@ const DetailPay = styled.div`
   width: 100%;
 `;
 const EmptyCard = styled.div`
-  width: 40%;
+  width: 37%;
+  margin-left: 1.5em;
   margin-bottom: 2em;
   margin-right: 1.25em;
   display: inline-block;
+  @media ${device.lg} {
+    width: 42%;
+  }
+
+  @media ${device.md} {
+    width: 70%;
+  }
+
+  @media ${device.sm} {
+    width: 90%;
+  }
 `;
 
 const DonateDivName = styled.div`
@@ -94,20 +105,29 @@ const DonateButton = styled.button`
   border-radius: 3px;
   background: white;
   margin-bottom: 1.2em;
-  cursor: pointer;
 
   @media ${device.lg} {
     margin-left: -1em;
   }
 
-  &:hover {
-    color: white;
-    background: #0d6efd;
-  }
-
   &: active {
     box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
   }
+`;
+
+const CloseButton = styled.button`
+  font-size: 30px;
+  color: gray;
+  background: none;
+  border: none;
+  z-index: 1;
+  cursor: pointer;
+`;
+
+const CloseDiv = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 16px;
 `;
 
 const PayButton = styled.button`
@@ -121,11 +141,6 @@ const PayButton = styled.button`
   background: white;
   margin-top: 1em;
   cursor: pointer;
-
-  &:hover {
-    color: white;
-    background: #0d6efd;
-  }
 
   &: active {
     box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
@@ -146,7 +161,7 @@ const DonamteImgFate = {
 const Label = styled.label`
   color: black;
   margin-top: 5px;
-  padding : 5px;
+  padding: 5px;
 `;
 
 export default connect((state) => state)(
@@ -207,78 +222,85 @@ export default connect((state) => state)(
               onClick={function () {
                 self.setState({ selectedAmount: amount });
               }}
-              style={{ marginTop: '10px', marginBottom: '10px', paddingLeft: '5px' }}
+              style={{
+                marginTop: '10px',
+                marginBottom: '10px',
+                paddingLeft: '5px',
+              }}
             />
             {amount}
           </Label>
         ));
 
         const index = i + 1;
-        return count != index ? (
-          <Card key={i}>
-            {self.state.clickDonate[i] == true && (
-              <FateImg>
-                <img src={'/images/' + item.image} style={DonamteImgFate}></img>
-                <DetailPay>
-                  <Label>Select the amiount to donate (USD)</Label>
-                  <br />
-                  {payments}
-                  <br />
-                  <PayButton
-                    onClick={handlePay.call(
-                      self,
-                      item.id,
-                      self.state.selectedAmount,
-                      item.currency
-                    )}
-                  >Pay</PayButton>
-                </DetailPay>
-              </FateImg>
-            )}
-            {self.state.clickDonate[i] == false && (
-              <div>
-                {' '}
-                <img src={'/images/' + item.image} style={DonamteImg}></img>
-              </div>
-            )}
-            <DonateDivName>{item.name}</DonateDivName>
-            <DonateDivButton>
-              <DonateButton
-                key={item.name.i}
-                onClick={() =>
-                  self.onHandleDonate(i, self.state.clickDonate[i])
-                }
-              >
-                Donate
-              </DonateButton>
-            </DonateDivButton>
-          </Card>
-        ) : count % 2 != 0 ? (
-          <>
-            <Card key={i}>
-              <div>
-                <img src={'/images/' + item.image} style={DonamteImg}></img>
-              </div>
-              <DonateDivName>{item.name}</DonateDivName>
-              <DonateDivButton>
-                <DonateButton>Donate</DonateButton>
-              </DonateDivButton>
-              {/* {payments}
-              <button
-                onClick={handlePay.call(
-                  self,
-                  item.id,
-                  self.state.selectedAmount,
-                  item.currency
+        // return count != index ? (
+        return (
+          i < count && (
+            <>
+              <Card key={i}>
+                {self.state.clickDonate[i] ? (
+                  <FateImg>
+                    <img
+                      src={'/images/' + item.image}
+                      style={DonamteImgFate}
+                    ></img>
+                    <CloseDiv>
+                      <CloseButton
+                        onClick={() =>
+                          self.onHandleDonate(i, self.state.clickDonate[i])
+                        }
+                        key={'close'.i}
+                      >
+                        &times;
+                      </CloseButton>
+                    </CloseDiv>
+                    <DetailPay>
+                      <Label>Select the amiount to donate (USD)</Label>
+                      <br />
+                      {payments}
+                      <br />
+                      <PayButton
+                        onClick={handlePay.call(
+                          self,
+                          item.id,
+                          self.state.selectedAmount,
+                          item.currency
+                        )}
+                      >
+                        Pay
+                      </PayButton>
+                    </DetailPay>
+                  </FateImg>
+                ) : (
+                  <div>
+                    <img src={'/images/' + item.image} style={DonamteImg}></img>
+                  </div>
                 )}
-              >
-                Pay
-              </button> */}
-            </Card>
-            <EmptyCard key={'empc'.i}></EmptyCard>
-          </>
-        ) : (
-          ''
+                <div
+                  style={{ opacity: self.state.clickDonate[i] ? '0.1' : '1' }}
+                >
+                  <DonateDivName>{item.name}</DonateDivName>
+                  <DonateDivButton>
+                    <DonateButton
+                      key={item.name.i}
+                      disabled={self.state.clickDonate[i]}
+                      onClick={() =>
+                        self.onHandleDonate(i, self.state.clickDonate[i])
+                      }
+                      style={{
+                        cursor: self.state.clickDonate[i]
+                          ? 'default'
+                          : 'pointer',
+                      }}
+                    >
+                      Donate
+                    </DonateButton>
+                  </DonateDivButton>
+                </div>
+              </Card>
+              {i+1 == count && <EmptyCard key={'empc'.i}></EmptyCard>}
+            </>
+          )
         );
       });
 
