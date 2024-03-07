@@ -22,7 +22,7 @@ import {
   DonateAllContentEmpty,
   Footer,
 } from './components/styled-component';
-import Modal from './components/modal'
+import Modal from './components/modal';
 
 const DonamteImg = {
   width: '100%',
@@ -49,7 +49,7 @@ export default connect((state) => state)(
       charities: [],
       selectedAmount: 10,
       clickDonate: [],
-      modal: false
+      modal: false,
     };
 
     componentDidMount() {
@@ -75,13 +75,13 @@ export default connect((state) => state)(
         });
     }
 
-    setModalOpen = () =>{
-      this.setState({modal : true})
-    }
-    
-    setModalClose = () =>{
-      this.setState({modal : false})
-    }
+    setModalOpen = () => {
+      this.setState({ modal: true });
+    };
+
+    setModalClose = () => {
+      this.setState({ modal: false });
+    };
 
     initClickDonate = (charities) => {
       let list = [];
@@ -157,10 +157,11 @@ export default connect((state) => state)(
                           handlePay.call(
                             self,
                             item.id,
+                            item.name,
                             self.state.selectedAmount,
                             item.currency
-                          )
-                          self.setModalOpen()
+                          );
+                          self.setModalOpen();
                         }}
                       >
                         Pay
@@ -203,7 +204,11 @@ export default connect((state) => state)(
       return (
         <>
           <Header>
-            <img style={{marginLeft:"1em"}}src="https://camo.githubusercontent.com/d509791c2c6ab11a38047679868334fb3d138889d52ff1c0f278b003f849f464/68747470733a2f2f63646e2e6f6d6973652e636f2f6173736574732f6f6d6973652d6c6f676f2f6f6d6973652d776f72646d61726b2e706e67" width={125}/>
+            <img
+              style={{ marginLeft: '1em' }}
+              src="https://camo.githubusercontent.com/d509791c2c6ab11a38047679868334fb3d138889d52ff1c0f278b003f849f464/68747470733a2f2f63646e2e6f6d6973652e636f2f6173736574732f6f6d6973652d6c6f676f2f6f6d6973652d776f72646d61726b2e706e67"
+              width={125}
+            />
           </Header>
           <Containers>
             <h1>Tamboon React</h1>
@@ -220,7 +225,11 @@ export default connect((state) => state)(
               </DonateAllContent2>
             </DonateAll>
           </Containers>
-          <Modal open={this.state.modal} onClose={this.setModalClose} message={this.props.message}></Modal>
+          <Modal
+            open={this.state.modal}
+            onClose={this.setModalClose}
+            message={this.props.message}
+          ></Modal>
           <Footer></Footer>
         </>
       );
@@ -242,7 +251,7 @@ export default connect((state) => state)(
     })
  */
 
-function handlePay(id, amount, currency) {
+function handlePay(id, name, amount, currency) {
   fetch('http://localhost:3001/payments', {
     method: 'POST',
     headers: {
@@ -259,7 +268,7 @@ function handlePay(id, amount, currency) {
     .then((json) => {
       this.props.dispatch({
         type: 'UPDATE_MESSAGE',
-        message: `Thank You for Donate (${amount}${currency}).`,
+        message: `Thank You for Donate (${name} :${amount}${currency}).`,
       });
       const sum = summaryDonations([json].map((item) => item.amount));
       if (sum) {
