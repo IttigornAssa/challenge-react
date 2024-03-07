@@ -22,6 +22,7 @@ import {
   DonateAllContentEmpty,
   Footer,
 } from './components/styled-component';
+import Modal from './components/modal'
 
 const DonamteImg = {
   width: '100%',
@@ -48,6 +49,7 @@ export default connect((state) => state)(
       charities: [],
       selectedAmount: 10,
       clickDonate: [],
+      modal: false
     };
 
     componentDidMount() {
@@ -71,6 +73,14 @@ export default connect((state) => state)(
             amount: summaryDonations(data.map((item) => item.amount)),
           });
         });
+    }
+
+    setModalOpen = () =>{
+      this.setState({modal : true})
+    }
+    
+    setModalClose = () =>{
+      this.setState({modal : false})
     }
 
     initClickDonate = (charities) => {
@@ -143,14 +153,15 @@ export default connect((state) => state)(
                       {payments}
                       <br />
                       <PayButton
-                        onClick={() =>
+                        onClick={() => {
                           handlePay.call(
                             self,
                             item.id,
                             self.state.selectedAmount,
                             item.currency
                           )
-                        }
+                          self.setModalOpen()
+                        }}
                       >
                         Pay
                       </PayButton>
@@ -189,9 +200,6 @@ export default connect((state) => state)(
         );
       });
 
-      const donate = this.props.donate;
-      const message = this.props.message;
-
       return (
         <>
           <Header>
@@ -199,7 +207,6 @@ export default connect((state) => state)(
           </Header>
           <Containers>
             <h1>Tamboon React</h1>
-            <p style={style}>{message}</p>
             {cards}
             <DonateAll>
               <DonateAllContent1>
@@ -209,10 +216,11 @@ export default connect((state) => state)(
               <DonateAllContentEmpty></DonateAllContentEmpty>
               <DonateAllContent2>
                 All donations :{' '}
-                <span style={{ color: '#0d6efd' }}>{donate}</span>
+                <span style={{ color: '#0d6efd' }}>{this.props.donate}</span>
               </DonateAllContent2>
             </DonateAll>
           </Containers>
+          <Modal open={this.state.modal} onClose={this.setModalClose} message={this.props.message}></Modal>
           <Footer></Footer>
         </>
       );
@@ -251,7 +259,7 @@ function handlePay(id, amount, currency) {
     .then((json) => {
       this.props.dispatch({
         type: 'UPDATE_MESSAGE',
-        message: 'สวัสดีปีใหม่',
+        message: `Thank You for Donate (${amount}${currency}).`,
       });
       const sum = summaryDonations([json].map((item) => item.amount));
       if (sum) {
