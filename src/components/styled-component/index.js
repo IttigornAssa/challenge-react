@@ -9,17 +9,17 @@ const device = {
   xxl: `(max-width: ${'1920px'})`,
 };
 export const Header = styled.div`
-    background-color: #fff;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e9eaf0;
-`
+  background-color: #fff;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e9eaf0;
+`;
 
 export const Footer = styled.div`
-    border-top: 1px solid #e9eaf0;
-    padding-top: 20px;
-    padding-bottom: 20px;
-`
+  border-top: 1px solid #e9eaf0;
+  padding-top: 20px;
+  padding-bottom: 20px;
+`;
 
 export const Containers = styled.div`
   width: 80%;
@@ -158,8 +158,8 @@ export const DonateAllContent1 = styled.div`
 `;
 
 export const DonateAllContentEmpty = styled.div`
-    width: 20%;
-`
+  width: 20%;
+`;
 
 export const DonateAllContent2 = styled.div`
   width: 30%;
@@ -213,3 +213,44 @@ export const Label = styled.label`
   padding: 5px;
 `;
 
+export const ModalOverlay = styled.div`
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  alignitems: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+export const ModalComponent = styled.div`
+  position: relative;
+  background-color: #fff;
+  padding: 2em;
+  border-radius: 5px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin: auto;
+  white-space: pre-line;
+  @media ${device.md} {
+    width: 80%;
+  }
+  };
+`;
+
+export const CloseModal = {
+  position: 'absolute',
+  top: '5px',
+  right: '5px',
+  fontSize: '24px',
+  background: 'transparent',
+  color: 'black',
+  border: 'transparent',
+  cursor: 'pointer',
+};

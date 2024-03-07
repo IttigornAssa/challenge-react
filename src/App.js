@@ -268,7 +268,7 @@ function handlePay(id, name, amount, currency) {
     .then((json) => {
       this.props.dispatch({
         type: 'UPDATE_MESSAGE',
-        message: `Thank You for Donate (${name} :${amount}${currency}).`,
+        message: "Thank You for Donate \n"+"("+name +":"+amount+currency+").",
       });
       const sum = summaryDonations([json].map((item) => item.amount));
       if (sum) {
