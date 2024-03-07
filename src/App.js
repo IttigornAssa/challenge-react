@@ -1,151 +1,27 @@
 import React, { Component } from 'react';
 import fetch from 'isomorphic-fetch';
-import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { summaryDonations } from './helpers';
-
-const device = {
-  xs: `(max-width: ${'400px'})`,
-  sm: `(max-width: ${'600px'})`,
-  md: `(max-width: ${'900px'})`,
-  lg: `(max-width: ${'1280px'})`,
-  xl: `(max-width: ${'1440px'})`,
-  xxl: `(max-width: ${'1920px'})`,
-};
-
-const Containers = styled.div`
-  width: 80%;
-  margin: auto;
-  text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #595959;
-
-  @media ${device.xl} {
-    width: 100%;
-  }
-`;
-
-const Card = styled.div`
-  border: 1px solid #ccc;
-  width: 37%;
-  display: inline-block;
-  margin-left: 1.5em;
-  margin-bottom: 2em;
-  margin-right: 1.25em;
-  border-radius: 5px;
-  border: none;
-  box-shadow: #ecece9 0px 3px 3px 3px;
-
-  @media ${device.lg} {
-    width: 42%;
-  }
-
-  @media ${device.md} {
-    width: 70%;
-  }
-
-  @media ${device.sm} {
-    width: 90%;
-  }
-`;
-
-const FateImg = styled.div`
-  position: relative;
-  text-align: center;
-  color: white;
-`;
-
-const DetailPay = styled.div`
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-`;
-const EmptyCard = styled.div`
-  width: 37%;
-  margin-left: 1.5em;
-  margin-bottom: 2em;
-  margin-right: 1.25em;
-  display: inline-block;
-  @media ${device.lg} {
-    width: 42%;
-  }
-
-  @media ${device.md} {
-    width: 70%;
-  }
-
-  @media ${device.sm} {
-    width: 90%;
-  }
-`;
-
-const DonateDivName = styled.div`
-  width: 70%;
-  display: inline-block;
-  text-align: left;
-  text-indent: 2em;
-  font-weight: bold;
-`;
-
-const DonateDivButton = styled.div`
-  width: 30%;
-  display: inline-block;
-`;
-
-const DonateButton = styled.button`
-  color: #0d6efd;
-  border-color: #0d6efd;
-  font-size: 1em;
-  font-weight: bold;
-  margin: 1em;
-  padding: 0.25em 1em;
-  border: 2px solid #0d6efd;
-  border-radius: 3px;
-  background: white;
-  margin-bottom: 1.2em;
-
-  @media ${device.lg} {
-    margin-left: -1em;
-  }
-
-  &: active {
-    box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
-  }
-`;
-
-const CloseButton = styled.button`
-  font-size: 30px;
-  color: gray;
-  background: none;
-  border: none;
-  z-index: 1;
-  cursor: pointer;
-`;
-
-const CloseDiv = styled.div`
-  position: absolute;
-  top: 8px;
-  right: 16px;
-`;
-
-const PayButton = styled.button`
-  color: #0d6efd;
-  border-color: #0d6efd;
-  font-size: 1em;
-  font-weight: bold;
-  padding: 0.25em 0.5em;
-  border: 2px solid #0d6efd;
-  border-radius: 3px;
-  background: white;
-  margin-top: 1em;
-  cursor: pointer;
-
-  &: active {
-    box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
-  }
-`;
+import {
+  Header,
+  Containers,
+  Card,
+  FateImg,
+  DetailPay,
+  EmptyCard,
+  DonateDivButton,
+  DonateDivName,
+  DonateButton,
+  CloseButton,
+  CloseDiv,
+  PayButton,
+  Label,
+  DonateAll,
+  DonateAllContent1,
+  DonateAllContent2,
+  DonateAllContentEmpty,
+  Footer,
+} from './components/styled-component';
 
 const DonamteImg = {
   width: '100%',
@@ -158,11 +34,13 @@ const DonamteImgFate = {
   opacity: '0.1',
 };
 
-const Label = styled.label`
-  color: black;
-  margin-top: 5px;
-  padding: 5px;
-`;
+const style = {
+  color: 'red',
+  margin: '1em 0',
+  fontWeight: 'bold',
+  fontSize: '16px',
+  textAlign: 'center',
+};
 
 export default connect((state) => state)(
   class App extends Component {
@@ -197,7 +75,7 @@ export default connect((state) => state)(
 
     initClickDonate = (charities) => {
       let list = [];
-      charities.map((item) => {
+      charities.map(() => {
         list.push(false);
       });
       this.setState({ clickDonate: [...list] });
@@ -206,8 +84,12 @@ export default connect((state) => state)(
     onHandleDonate = (i, e) => {
       let update = this.state.clickDonate;
       update[i] = e == true ? false : true;
+      update.map((item, index) => {
+        if (i !== index) {
+          update[index] = false;
+        }
+      });
       this.setState({ clickDonate: update });
-      console.log(this.state.clickDonate);
     };
 
     render() {
@@ -222,6 +104,7 @@ export default connect((state) => state)(
               onClick={function () {
                 self.setState({ selectedAmount: amount });
               }}
+              defaultChecked={amount === self.state.selectedAmount}
               style={{
                 marginTop: '10px',
                 marginBottom: '10px',
@@ -232,8 +115,6 @@ export default connect((state) => state)(
           </Label>
         ));
 
-        const index = i + 1;
-        // return count != index ? (
         return (
           i < count && (
             <>
@@ -255,17 +136,21 @@ export default connect((state) => state)(
                       </CloseButton>
                     </CloseDiv>
                     <DetailPay>
-                      <Label>Select the amiount to donate (USD)</Label>
+                      <Label>
+                        Select the amiount to donate ({item.currency})
+                      </Label>
                       <br />
                       {payments}
                       <br />
                       <PayButton
-                        onClick={handlePay.call(
-                          self,
-                          item.id,
-                          self.state.selectedAmount,
-                          item.currency
-                        )}
+                        onClick={() =>
+                          handlePay.call(
+                            self,
+                            item.id,
+                            self.state.selectedAmount,
+                            item.currency
+                          )
+                        }
                       >
                         Pay
                       </PayButton>
@@ -298,30 +183,38 @@ export default connect((state) => state)(
                   </DonateDivButton>
                 </div>
               </Card>
-              {i+1 == count && <EmptyCard key={'empc'.i}></EmptyCard>}
+              {i + 1 == count && <EmptyCard key={'empc'.i}></EmptyCard>}
             </>
           )
         );
       });
 
-      const style = {
-        color: 'red',
-        margin: '1em 0',
-        fontWeight: 'bold',
-        fontSize: '16px',
-        textAlign: 'center',
-      };
-
       const donate = this.props.donate;
       const message = this.props.message;
 
       return (
-        <Containers>
-          <h1>Tamboon React</h1>
-          <p>All donations: {donate}</p>
-          <p style={style}>{message}</p>
-          {cards}
-        </Containers>
+        <>
+          <Header>
+            <img style={{marginLeft:"1em"}}src="https://camo.githubusercontent.com/d509791c2c6ab11a38047679868334fb3d138889d52ff1c0f278b003f849f464/68747470733a2f2f63646e2e6f6d6973652e636f2f6173736574732f6f6d6973652d6c6f676f2f6f6d6973652d776f72646d61726b2e706e67" width={125}/>
+          </Header>
+          <Containers>
+            <h1>Tamboon React</h1>
+            <p style={style}>{message}</p>
+            {cards}
+            <DonateAll>
+              <DonateAllContent1>
+                Invitation to Donate. "There are many more people in need of
+                help".
+              </DonateAllContent1>
+              <DonateAllContentEmpty></DonateAllContentEmpty>
+              <DonateAllContent2>
+                All donations :{' '}
+                <span style={{ color: '#0d6efd' }}>{donate}</span>
+              </DonateAllContent2>
+            </DonateAll>
+          </Containers>
+          <Footer></Footer>
+        </>
       );
     }
   }
@@ -340,4 +233,37 @@ export default connect((state) => state)(
       body: `{ "charitiesId": ${id}, "amount": ${amount}, "currency": "${currency}" }`,
     })
  */
-function handlePay(id, amount, currency) {}
+
+function handlePay(id, amount, currency) {
+  fetch('http://localhost:3001/payments', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: `{ "charitiesId": ${id}, "amount": ${amount}, "currency": "${currency}" }`,
+  })
+    .then((resp) => {
+      if (!resp.ok) {
+        console.log('fetch not ok');
+      }
+      return resp.json();
+    })
+    .then((json) => {
+      this.props.dispatch({
+        type: 'UPDATE_MESSAGE',
+        message: 'สวัสดีปีใหม่',
+      });
+      const sum = summaryDonations([json].map((item) => item.amount));
+      if (sum) {
+        this.props.dispatch({
+          type: 'UPDATE_TOTAL_DONATE',
+          amount: sum,
+        });
+      } else {
+        console.log('summaryDonations error');
+      }
+    })
+    .catch((error) => {
+      console.log('fetch error', error);
+    });
+}

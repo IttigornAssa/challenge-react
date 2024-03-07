@@ -15,6 +15,7 @@ const store = createStore(function (state, action) {
 
   switch (action.type) {
     case 'UPDATE_TOTAL_DONATE':
+      console.log(state)
       return Object.assign({}, _state, {
         donate: _state.donate + action.amount,
       });
